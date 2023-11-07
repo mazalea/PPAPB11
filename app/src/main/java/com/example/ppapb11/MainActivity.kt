@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
 
         val client = ApiClient.getInstance()
         val response = client.getAllUsers()
@@ -24,15 +24,24 @@ class MainActivity : AppCompatActivity() {
 
         response.enqueue(object : Callback<Users> {
             override fun onResponse(call: Call<Users>, response: Response<Users>) {
-                for (i in response.body()!!.data) {
-                    userList.add(i.employeeName)
+                val thisResult = response.body()
+                val data = thisResult?.data?: emptyList()
+                if (data.isNotEmpty()){
+                    for (i in data){
+                        userList.add(i.employeeName)
+                    }
                 }
+                println("this user list ${userList.size}")
+                println("this data ${response.body()?.data?.size}")
+
                 val listAdapter = ArrayAdapter(
                     this@MainActivity,
                     android.R.layout.simple_list_item_1,
                     userList
                 )
+
                 binding.lvNama.adapter = listAdapter
+
             }
             override fun onFailure(call: Call<Users>, t: Throwable) {
                 Toast.makeText(this@MainActivity, "Koneksi error",
