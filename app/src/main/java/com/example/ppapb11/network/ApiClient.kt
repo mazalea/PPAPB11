@@ -17,10 +17,11 @@ object ApiClient {
             .build()
 
         val builder = Retrofit.Builder()
-            .baseUrl("https://dummy.restapiexample.com/api/v1/")
+            .baseUrl("https://demo.lazday.com/rest-api-sample/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(mOkHttpClient)
             .build()
+
         return builder.create(ApiService::class.java)
     }
 
